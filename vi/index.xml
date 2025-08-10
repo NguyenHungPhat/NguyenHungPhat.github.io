@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>1. Introduction on Tạo mới tài khoản AWS</title>
+    <link>/vi/</link>
+    <description>Recent content in 1. Introduction on Tạo mới tài khoản AWS</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="/vi/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>3.1. Tạo ECR Repository</title>
+      <link>/vi/steps/2-create-ecr-repo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/2-create-ecr-repo/</guid>
+      <description>Tạo Amazon ECR Repository (Bật tính năng Scan on Push) Quyền tối thiểu cần có Để thực hiện các bước sau, bạn cần có tối thiểu các quyền IAM sau:
+ ecr:CreateRepository ecr:DescribeRepositories  Các bước thực hiện  Mở terminal với AWS CLI đã được cấu hình. Chạy lệnh sau để tạo một ECR repository với tính năng quét ảnh (image scanning) được bật: aws ecr create-repository \  --repository-name your-name-repo \  --image-scanning-configuration scanOnPush=true \  --region your-region  Nếu repository đã tồn tại, lệnh sẽ trả về lỗi.</description>
+    </item>
+    
+    <item>
+      <title>Cài đặt AWS CLI và Docker Desktop</title>
+      <link>/vi/enviroment-setup/1-install-awscli-docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/enviroment-setup/1-install-awscli-docker/</guid>
+      <description>2.1 Cài đặt AWS CLI 2.1.1 Yêu cầu tối thiểu  Hệ điều hành: Windows, macOS hoặc Linux. Đã có tài khoản AWS.  2.1.2 Các bước   Tải AWS CLI
+ Windows: Tải file cài đặt từ AWS CLI v2 Download. macOS: Cài qua brew hoặc tải file .pkg. Linux: Sử dụng gói .zip hoặc qua trình quản lý gói (apt, yum).    Cài đặt
+ Windows: Mở file .</description>
+    </item>
+    
+    <item>
+      <title>Dọn dẹp tài nguyên</title>
+      <link>/vi/clean-up-resource/10-cleanup/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/clean-up-resource/10-cleanup/</guid>
+      <description>Xóa tất cả tài nguyên được tạo trong buổi demo này Quyền tối thiểu cần có  ecr:DeleteRepository iam:DetachUserPolicy iam:DeletePolicy iam:DeleteUser  Các bước   Xóa ECR repository:
+aws ecr delete-repository --repository-name demo-ecr-repo --force --region ap-southeast-1   Gỡ liên kết và xóa các chính sách:
+aws iam detach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam detach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy   Xóa người dùng IAM:</description>
+    </item>
+    
+    <item>
+      <title>3.2 Tạo Người Dùng IAM</title>
+      <link>/vi/steps/3-create-iam-user/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/3-create-iam-user/</guid>
+      <description>Tạo người dùng IAM cho Dev và Ops Quyền tối thiểu Để thực hiện các bước sau, bạn cần có tối thiểu các quyền IAM sau:
+ iam:CreateUser iam:ListUsers  Các bước  Tạo người dùng Dev: aws iam create-user --user-name dev || echo &amp;#34;User dev already exists&amp;#34;  Tạo người dùng Ops: aws iam create-user --user-name ops || echo &amp;#34;User ops already exists&amp;#34;   Mẹo Để tạo Access Key cho những người dùng này (sử dụng cho CLI/Docker login):</description>
+    </item>
+    
+    <item>
+      <title>3.3. Tạo Policy cho Dev (Push Image)</title>
+      <link>/vi/steps/4-dev-policy-push/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/4-dev-policy-push/</guid>
+      <description>Tạo và Gán Policy cho Người Dùng Dev Quyền tối thiểu  iam:CreatePolicy iam:AttachUserPolicy  Các bước  Tạo file policy dev-policy.json: { &amp;#34;Version&amp;#34;: &amp;#34;2012-10-17&amp;#34;, &amp;#34;Statement&amp;#34;: [ { &amp;#34;Effect&amp;#34;: &amp;#34;Allow&amp;#34;, &amp;#34;Action&amp;#34;: [ &amp;#34;ecr:GetAuthorizationToken&amp;#34;, &amp;#34;ecr:BatchCheckLayerAvailability&amp;#34;, &amp;#34;ecr:PutImage&amp;#34;, &amp;#34;ecr:InitiateLayerUpload&amp;#34;, &amp;#34;ecr:UploadLayerPart&amp;#34;, &amp;#34;ecr:CompleteLayerUpload&amp;#34; ], &amp;#34;Resource&amp;#34;: &amp;#34;arn:aws:ecr:ap-southeast-1:997118487291:repository/demo-ecr-repo&amp;#34; } ] }  Tạo policy trong IAM: aws iam create-policy --policy-name DevPushECRPolicy --policy-document file://dev-policy.json || echo &amp;#34;Policy already exists&amp;#34;  Gán policy cho người dùng Dev: aws iam attach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy   </description>
+    </item>
+    
+    <item>
+      <title>3.4. Tạo Policy cho Ops (Pull Image)</title>
+      <link>/vi/steps/5-ops-policy-pull/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/5-ops-policy-pull/</guid>
+      <description>Tạo và Gán Policy cho Người Dùng Ops Quyền tối thiểu  iam:CreatePolicy iam:AttachUserPolicy  Các bước  Tạo file policy ops-policy.json: { &amp;#34;Version&amp;#34;: &amp;#34;2012-10-17&amp;#34;, &amp;#34;Statement&amp;#34;: [ { &amp;#34;Effect&amp;#34;: &amp;#34;Allow&amp;#34;, &amp;#34;Action&amp;#34;: [ &amp;#34;ecr:GetAuthorizationToken&amp;#34;, &amp;#34;ecr:BatchCheckLayerAvailability&amp;#34;, &amp;#34;ecr:GetDownloadUrlForLayer&amp;#34;, &amp;#34;ecr:BatchGetImage&amp;#34; ], &amp;#34;Resource&amp;#34;: &amp;#34;arn:aws:ecr:ap-southeast-1:997118487291:repository/demo-ecr-repo&amp;#34; } ] }  Tạo policy trong IAM: aws iam create-policy --policy-name OpsPullECRPolicy --policy-document file://ops-policy.json || echo &amp;#34;Policy already exists&amp;#34;  Gán policy cho người dùng Ops: aws iam attach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy   </description>
+    </item>
+    
+    <item>
+      <title>3.5. Build và Push Docker Image</title>
+      <link>/vi/steps/6-build-push-image/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/6-build-push-image/</guid>
+      <description>Build và Push Docker Image lên ECR Quyền tối thiểu  Người dùng Dev phải có quyền push (xem Bước 3).  Các bước  Xác thực Docker với ECR: ECR_REPO_URI=&amp;#34;997118487291.dkr.ecr.ap-southeast-1.amazonaws.com/demo-ecr-repo&amp;#34; aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin &amp;#34;$ECR_REPO_URI&amp;#34;  Tạo file Dockerfile: FROMalpine:3.18CMD [&amp;#34;echo&amp;#34;, &amp;#34;Hello from AWS ECR&amp;#34;] Build image (chỉ định platform để tương thích quét lỗ hổng): DOCKER_BUILDKIT=0 docker build --platform linux/amd64 -t &amp;#34;${ECR_REPO_URI}:latest&amp;#34; .</description>
+    </item>
+    
+    <item>
+      <title>3.6. Kiểm tra Image Manifest</title>
+      <link>/vi/steps/7-check-manifest/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/7-check-manifest/</guid>
+      <description>Xác minh Image Manifest cho việc quét ECR Quyền tối thiểu  ecr:BatchGetImage  Các bước  Lấy loại media của image manifest: aws ecr batch-get-image \  --repository-name demo-ecr-repo \  --image-ids imageTag=latest \  --region ap-southeast-1 \  --query &amp;#39;images[0].imageManifestMediaType&amp;#39; \  --output text  Đảm bảo media type là một trong các giá trị sau:  application/vnd.docker.distribution.manifest.v2+json application/vnd.oci.image.manifest.v1+json   Kết quả:   </description>
+    </item>
+    
+    <item>
+      <title>3.7. Bắt đầu quét ảnh ECR</title>
+      <link>/vi/steps/8-scan-image/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/8-scan-image/</guid>
+      <description>Bắt đầu quét ảnh ECR và chờ kết quả Quyền tối thiểu cần có  ecr:StartImageScan ecr:DescribeImageScanFindings  Các bước thực hiện  Lấy digest của ảnh: DIGEST=$(aws ecr list-images --repository-name demo-ecr-repo --query &amp;#39;imageIds[?imageTag==`latest`].imageDigest&amp;#39; --output text --region ap-southeast-1)  Bắt đầu quét ảnh: aws ecr start-image-scan --repository-name demo-ecr-repo --image-id imageDigest=&amp;#34;$DIGEST&amp;#34; --region ap-southeast-1  Kiểm tra trạng thái quét đến khi hoàn thành: while true; do STATUS=$(aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=&amp;#34;$DIGEST&amp;#34; --query &amp;#39;imageScanStatus.</description>
+    </item>
+    
+    <item>
+      <title>3.8. Xem và đánh giá kết quả quét</title>
+      <link>/vi/steps/9-scan-results/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/9-scan-results/</guid>
+      <description>Lấy và xem kết quả quét ECR Quyền tối thiểu cần có  ecr:DescribeImageScanFindings  Các bước thực hiện  Đếm tổng số kết quả phát hiện và theo mức độ nghiêm trọng: TOTAL_FINDINGS=$(aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=&amp;#34;$DIGEST&amp;#34; --region ap-southeast-1 --query &amp;#39;length(imageScanFindings.findings)&amp;#39; --output text)  Nếu có các phát hiện ở mức CRITICAL hoặc HIGH, liệt kê chúng: aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=&amp;#34;$DIGEST&amp;#34; --region ap-southeast-1 --query &amp;#34;imageScanFindings.</description>
+    </item>
+    
+    <item>
+      <title>3.9. Full Script</title>
+      <link>/vi/steps/10-fullscript/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/steps/10-fullscript/</guid>
+      <description>Script này thực hiện các bước sau:
+ Tạo ECR repository với tính năng scan-on-push bật sẵn. Tạo IAM users gồm dev (push image) và ops (pull image). Gán policy cho từng user để hạn chế quyền theo chức năng. Build &amp;amp; Push Docker image lên ECR. Kiểm tra manifest image để đảm bảo hỗ trợ scan. Scan image và chờ kết quả. Xuất kết quả scan theo mức độ severity (CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL).</description>
+    </item>
+    
+  </channel>
+</rss>

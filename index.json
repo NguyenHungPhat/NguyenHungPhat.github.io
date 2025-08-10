@@ -1,0 +1,127 @@
+[
+{
+	"uri": "/introduce/",
+	"title": "1. Introduce",
+	"tags": [],
+	"description": "",
+	"content": "Introduction The AWS ECR Demo is a hands-on project designed to demonstrate how to securely manage container images using Amazon Elastic Container Registry (ECR).\nThrough this demo, you will learn how to:\n Create and manage private ECR repositories. Configure IAM users, groups, and policies for secure access. Build and push Docker images to ECR. Scan container images for security vulnerabilities. Apply security best practices to protect your container supply chain. Clean up AWS resources to avoid unnecessary costs.  By completing this demo, you will gain practical skills in:\n AWS CLI usage for resource management and automation. Docker commands for image building and management. Cloud security concepts related to container image storage.  This knowledge is directly applicable to real-world cloud and DevOps workflows, enabling you to confidently work with secure container deployments on AWS.\n"
+},
+{
+	"uri": "/",
+	"title": "1. Introduction",
+	"tags": [],
+	"description": "",
+	"content": "Container Registry Management ECR và Security Policies Overview The AWS ECR Demo is a practical, hands-on project designed to demonstrate how to securely manage and work with container images in the cloud using Amazon Elastic Container Registry (ECR).\nThe demo simulates a real-world DevOps workflow, from building Docker images locally to pushing them into a secure AWS repository, scanning them for vulnerabilities, and managing access through IAM policies.\nObjectives By following this demo, you will:\n Understand how Amazon ECR works as a fully managed container registry. Learn to configure AWS CLI and Docker Desktop for cloud-based container workflows. Gain experience in IAM user and policy management for secure access control. Learn how to push, pull, and scan Docker images in ECR. Apply best practices for container security and resource cleanup.  Learning Outcomes After completing this project, you will be able to:\n Confidently interact with AWS services via the CLI. Manage Docker images and repositories in AWS. Implement security scanning to identify vulnerabilities in container images. Control user permissions with IAM to follow the principle of least privilege. Optimize AWS usage by removing unused resources to avoid extra costs.  Why This Matters In modern cloud-native application development, container security is essential.\nThis demo not only teaches the technical steps but also instills security-focused thinking — ensuring your container supply chain is protected from vulnerabilities and unauthorized access.\n"
+},
+{
+	"uri": "/steps/2-create-ecr-repo/",
+	"title": "3.1. Create ECR Repository",
+	"tags": [],
+	"description": "",
+	"content": "Create an Amazon ECR Repository (Enable Scan on Push) Minimum Permissions To perform the following steps, you must have at least the following IAM permissions:\n ecr:CreateRepository ecr:DescribeRepositories  Steps  Open a terminal with AWS CLI configured. Run the following command to create an ECR repository with image scanning enabled: aws ecr create-repository --repository-name your-name-repo --image-scanning-configuration scanOnPush=true --region your-region  If the repository already exists, the command will return an error. You can safely ignore it. Result:   Tip Check the repository details:\naws ecr describe-repositories --repository-names demo-ecr-repo --region ap-southeast-1 "
+},
+{
+	"uri": "/clean-up-resource/10-cleanup/",
+	"title": "Cleanup Resources",
+	"tags": [],
+	"description": "",
+	"content": "Delete All Resources Created in This Demo Minimum Permissions  ecr:DeleteRepository iam:DetachUserPolicy iam:DeletePolicy iam:DeleteUser  Steps  Delete ECR repository: aws ecr delete-repository --repository-name demo-ecr-repo --force --region ap-southeast-1  Detach and delete policies: aws iam detach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam detach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy  Delete IAM users: aws iam delete-user --user-name dev aws iam delete-user --user-name ops   "
+},
+{
+	"uri": "/enviroment-setup/1-install-awscli-docker/",
+	"title": "Install AWS CLI and Docker Desktop",
+	"tags": [],
+	"description": "",
+	"content": "2.1 Install AWS CLI 2.1.1 Minimum Requirements  Operating System: Windows, macOS, or Linux. An AWS account has been created.  2.1.2 Steps   Download AWS CLI\n Windows: Download the installer from AWS CLI v2 Download. macOS: Install via brew or download the .pkg file. Linux: Use the .zip package or your package manager (apt, yum).    Install\n Windows: Open the .msi file and follow the installation steps. macOS: Open the .pkg file or run: brew install awscli  Linux: curl \u0026#34;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\u0026#34; -o \u0026#34;awscliv2.zip\u0026#34; unzip awscliv2.zip sudo ./aws/install     Check version\naws --version   Configure AWS CLI\naws configure   AWS CLI will prompt for the following information\nAWS Access Key ID [None]: \u0026lt;your key\u0026gt; AWS Secret Access Key [None]: \u0026lt;your secret key\u0026gt; Default region name [None]: \u0026lt;your region\u0026gt; Default output format [None]: \u0026lt;press Enter\u0026gt;   2.2 Install Docker Desktop Install Docker Desktop 2.2.1 Minimum Requirements  Windows  Windows 10/11 64-bit. Enable WSL 2 or Hyper-V. Minimum 4GB RAM.   macOS  macOS 11 (Big Sur) or later. Supports Intel or Apple Silicon (M1/M2) chips.    2.2.2 Steps  Visit: https://www.docker.com/products/docker-desktop Choose the version for your OS:  Windows (x86_64 / ARM64) Mac (Intel / Apple Silicon) Linux      Install\n1.1 Windows\n Open the downloaded .exe file. Check Use WSL 2 instead of Hyper-V (recommended). Click Next and complete the installation. Restart your computer if prompted.  1.2 macOS\n Open the downloaded .dmg file. Drag Docker.app into Applications folder. Open Docker and grant permissions to run.    Verify installation\n  Open Terminal or CMD and run:\ndocker --version docker compose version "
+},
+{
+	"uri": "/enviroment-setup/",
+	"title": "2. Environment Setup",
+	"tags": [],
+	"description": "",
+	"content": "This environment setup ensures you have the necessary tools to follow the Amazon ECR Security Demo.\nWe will use AWS CLI for interacting with AWS services and Docker Desktop for building and managing container images.\nAWS CLI AWS Command Line Interface (AWS CLI) is a unified tool to manage AWS services directly from your terminal or command prompt.\nDocker Desktop Docker Desktop is a containerization platform for building, sharing, and running applications in containers.\nOnce AWS CLI and Docker Desktop are installed and configured, you will be ready to:\n Create an Amazon ECR repository. Push and scan container images. Implement IAM security controls. Clean up resources after testing.  "
+},
+{
+	"uri": "/steps/3-create-iam-user/",
+	"title": "3.2 Create IAM Users",
+	"tags": [],
+	"description": "",
+	"content": "Create IAM Users for Dev and Ops Minimum Permissions To perform the following steps, you must have at least the following IAM permissions:\n iam:CreateUser iam:ListUsers  Steps  Create the Dev user: aws iam create-user --user-name dev || echo \u0026#34;User dev already exists\u0026#34;  Create the Ops user: aws iam create-user --user-name ops || echo \u0026#34;User ops already exists\u0026#34;   Tip To create access keys for these users (for CLI/Docker login):\naws iam create-access-key --user-name dev aws iam create-access-key --user-name ops Result "
+},
+{
+	"uri": "/steps/",
+	"title": "3. Steps",
+	"tags": [],
+	"description": "",
+	"content": "AWS ECR Security Demo This guide walks you through creating an Amazon ECR repository, configuring IAM users and policies, pushing a Docker image, scanning it for vulnerabilities.\nEach section includes:\n Minimum Permissions Step-by-step instructions Tips and Notes  "
+},
+{
+	"uri": "/steps/4-dev-policy-push/",
+	"title": "3.3. Create Policy for Dev (Push Image)",
+	"tags": [],
+	"description": "",
+	"content": "Create and Attach Policy for Dev User Minimum Permissions  iam:CreatePolicy iam:AttachUserPolicy  Steps  Create a policy file dev-policy.json: { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:PutImage\u0026#34;, \u0026#34;ecr:InitiateLayerUpload\u0026#34;, \u0026#34;ecr:UploadLayerPart\u0026#34;, \u0026#34;ecr:CompleteLayerUpload\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:ap-southeast-1:997118487291:repository/demo-ecr-repo\u0026#34; } ] }  Create the policy in IAM: aws iam create-policy --policy-name DevPushECRPolicy --policy-document file://dev-policy.json || echo \u0026#34;Policy already exists\u0026#34;  Attach the policy to the Dev user: aws iam attach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy   "
+},
+{
+	"uri": "/steps/5-ops-policy-pull/",
+	"title": "3.4. Create Policy for Ops (Pull Image)",
+	"tags": [],
+	"description": "",
+	"content": "Create and Attach Policy for Ops User Minimum Permissions  iam:CreatePolicy iam:AttachUserPolicy  Steps  Create a policy file ops-policy.json: { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:GetDownloadUrlForLayer\u0026#34;, \u0026#34;ecr:BatchGetImage\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:ap-southeast-1:997118487291:repository/demo-ecr-repo\u0026#34; } ] }  Create the policy in IAM: aws iam create-policy --policy-name OpsPullECRPolicy --policy-document file://ops-policy.json || echo \u0026#34;Policy already exists\u0026#34;  Attach the policy to the Ops user: aws iam attach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy   "
+},
+{
+	"uri": "/clean-up-resource/",
+	"title": "4. Clean up resource",
+	"tags": [],
+	"description": "",
+	"content": "Clean up Resources After completing the AWS ECR Demo, it is important to remove any resources that were created to avoid incurring unnecessary costs and to maintain a clean AWS environment.\nResources to Remove   ECR Repository\n Delete the repository created for the demo. Ensure all images are removed before deleting the repository.    IAM Users, Groups, and Policies\n Remove the IAM user created for the demo. Detach and delete custom IAM policies. Delete IAM groups if they are no longer needed.    Local Docker Images\n Remove any Docker images built for the demo from your local environment to free up space.    "
+},
+{
+	"uri": "/steps/6-build-push-image/",
+	"title": "3.5. Build and Push Docker Image",
+	"tags": [],
+	"description": "",
+	"content": "Build and Push a Docker Image to ECR Minimum Permissions  Dev user must have push permissions (see Step 3).  Steps  Authenticate Docker to ECR: ECR_REPO_URI=\u0026#34;997118487291.dkr.ecr.ap-southeast-1.amazonaws.com/demo-ecr-repo\u0026#34; aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin \u0026#34;$ECR_REPO_URI\u0026#34;  Create a Dockerfile: FROMalpine:3.18CMD [\u0026#34;echo\u0026#34;, \u0026#34;Hello from AWS ECR\u0026#34;] Build the image (single platform for scanning compatibility): DOCKER_BUILDKIT=0 docker build --platform linux/amd64 -t \u0026#34;${ECR_REPO_URI}:latest\u0026#34; .  Push the image: docker push \u0026#34;${ECR_REPO_URI}:latest\u0026#34;  Result:   "
+},
+{
+	"uri": "/steps/7-check-manifest/",
+	"title": "3.6. Check Image Manifest",
+	"tags": [],
+	"description": "",
+	"content": "Verify Image Manifest for ECR Scanning Minimum Permissions  ecr:BatchGetImage  Steps  Get the image manifest media type: aws ecr batch-get-image --repository-name demo-ecr-repo --image-ids imageTag=latest --region ap-southeast-1 --query \u0026#39;images[0].imageManifestMediaType\u0026#39; --output text  Ensure the media type is either:  application/vnd.docker.distribution.manifest.v2+json application/vnd.oci.image.manifest.v1+json   Result:   "
+},
+{
+	"uri": "/steps/8-scan-image/",
+	"title": "3.7. Start Image Scan",
+	"tags": [],
+	"description": "",
+	"content": "Start ECR Image Scan and Wait for Results Minimum Permissions  ecr:StartImageScan ecr:DescribeImageScanFindings  Steps  Get the image digest: DIGEST=$(aws ecr list-images --repository-name demo-ecr-repo --query \u0026#39;imageIds[?imageTag==`latest`].imageDigest\u0026#39; --output text --region ap-southeast-1)  Start the scan: aws ecr start-image-scan --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region ap-southeast-1  Poll until the scan completes: while true; do STATUS=$(aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --query \u0026#39;imageScanStatus.status\u0026#39; --output text --region ap-southeast-1 2\u0026gt;/dev/null || echo \u0026#34;IN_PROGRESS\u0026#34;) echo \u0026#34;Scan status: $STATUS\u0026#34; [[ \u0026#34;$STATUS\u0026#34; == \u0026#34;COMPLETE\u0026#34; ]] \u0026amp;\u0026amp; break sleep 5 done  Result:   "
+},
+{
+	"uri": "/steps/9-scan-results/",
+	"title": "3.8. Review Scan Results",
+	"tags": [],
+	"description": "",
+	"content": "Get and Review ECR Scan Results Minimum Permissions  ecr:DescribeImageScanFindings  Steps  Count total findings and by severity: TOTAL_FINDINGS=$(aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region ap-southeast-1 --query \u0026#39;length(imageScanFindings.findings)\u0026#39; --output text)  If CRITICAL or HIGH findings exist, list them: aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region ap-southeast-1 --query \u0026#34;imageScanFindings.findings[?severity==\u0026#39;CRITICAL\u0026#39; || severity==\u0026#39;HIGH\u0026#39;][].{name:name,severity:severity,uri:uri}\u0026#34; --output table  Result:   "
+},
+{
+	"uri": "/steps/10-fullscript/",
+	"title": "3.9. Full Script",
+	"tags": [],
+	"description": "",
+	"content": "AWS ECR Demo Script This script performs the following steps:\n Create an ECR repository with scan-on-push enabled. Create IAM users: dev (push image) and ops (pull image). Attach policies to each user according to their permissions. Build \u0026amp; Push Docker image to ECR. Check image manifest to ensure scanning is supported. Scan image and wait for the result. Output scan results by severity level (CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL).   Script #!/usr/bin/env bash set -euo pipefail # === Configuration parameters === REGION=\u0026#34;ap-southeast-1\u0026#34; ACCOUNT_ID=\u0026#34;997118487291\u0026#34; REPO_NAME=\u0026#34;demo-ecr-repo\u0026#34; DEV_USER=\u0026#34;dev\u0026#34; OPS_USER=\u0026#34;ops\u0026#34; DEV_POLICY_NAME=\u0026#34;DevPushECRPolicy\u0026#34; OPS_POLICY_NAME=\u0026#34;OpsPullECRPolicy\u0026#34; IMAGE_TAG=\u0026#34;latest\u0026#34; IMAGE_NAME=\u0026#34;${REPO_NAME}:${IMAGE_TAG}\u0026#34; ECR_REPO_URI=\u0026#34;${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO_NAME}\u0026#34; echo \u0026#34;=== 1. Create ECR repository (enable scan-on-push) ===\u0026#34; aws ecr create-repository --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-scanning-configuration scanOnPush=true --region \u0026#34;$REGION\u0026#34; || echo \u0026#34;Repository already exists\u0026#34; echo \u0026#34;=== 2. Create IAM users ===\u0026#34; aws iam create-user --user-name \u0026#34;$DEV_USER\u0026#34; || echo \u0026#34;Dev user already exists\u0026#34; aws iam create-user --user-name \u0026#34;$OPS_USER\u0026#34; || echo \u0026#34;Ops user already exists\u0026#34; echo \u0026#34;=== 3. Create policy for dev (push image) ===\u0026#34; cat \u0026gt; dev-policy.json \u0026lt;\u0026lt;EOF { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:PutImage\u0026#34;, \u0026#34;ecr:InitiateLayerUpload\u0026#34;, \u0026#34;ecr:UploadLayerPart\u0026#34;, \u0026#34;ecr:CompleteLayerUpload\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:${REGION}:${ACCOUNT_ID}:repository/${REPO_NAME}\u0026#34; } ] } EOF aws iam create-policy --policy-name \u0026#34;$DEV_POLICY_NAME\u0026#34; --policy-document file://dev-policy.json || echo \u0026#34;Dev policy already exists\u0026#34; aws iam attach-user-policy --user-name \u0026#34;$DEV_USER\u0026#34; --policy-arn \u0026#34;arn:aws:iam::${ACCOUNT_ID}:policy/${DEV_POLICY_NAME}\u0026#34; echo \u0026#34;=== 4. Create policy for ops (pull image) ===\u0026#34; cat \u0026gt; ops-policy.json \u0026lt;\u0026lt;EOF { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:GetDownloadUrlForLayer\u0026#34;, \u0026#34;ecr:BatchGetImage\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:${REGION}:${ACCOUNT_ID}:repository/${REPO_NAME}\u0026#34; } ] } EOF aws iam create-policy --policy-name \u0026#34;$OPS_POLICY_NAME\u0026#34; --policy-document file://ops-policy.json || echo \u0026#34;Ops policy already exists\u0026#34; aws iam attach-user-policy --user-name \u0026#34;$OPS_USER\u0026#34; --policy-arn \u0026#34;arn:aws:iam::${ACCOUNT_ID}:policy/${OPS_POLICY_NAME}\u0026#34; echo \u0026#34;=== 5. Build \u0026amp; Push single-platform Docker image ===\u0026#34; aws ecr get-login-password --region \u0026#34;$REGION\u0026#34; | docker login --username AWS --password-stdin \u0026#34;$ECR_REPO_URI\u0026#34; cat \u0026gt; Dockerfile \u0026lt;\u0026lt;\u0026#39;EOF\u0026#39; FROM alpine:3.18 CMD [\u0026#34;echo\u0026#34;, \u0026#34;Hello from AWS ECR\u0026#34;] EOF DOCKER_BUILDKIT=0 docker build --platform linux/amd64 -t \u0026#34;${ECR_REPO_URI}:${IMAGE_TAG}\u0026#34; . docker push \u0026#34;${ECR_REPO_URI}:${IMAGE_TAG}\u0026#34; echo \u0026#34;=== 6. Check image manifest and scan ===\u0026#34; MEDIA_TYPE=$(aws ecr batch-get-image --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-ids imageTag=\u0026#34;$IMAGE_TAG\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#39;images[0].imageManifestMediaType\u0026#39; --output text) echo \u0026#34;Media type: $MEDIA_TYPE\u0026#34; if [[ \u0026#34;$MEDIA_TYPE\u0026#34; != \u0026#34;application/vnd.docker.distribution.manifest.v2+json\u0026#34; \u0026amp;\u0026amp; \u0026#34;$MEDIA_TYPE\u0026#34; != \u0026#34;application/vnd.oci.image.manifest.v1+json\u0026#34; ]]; then echo \u0026#34;Invalid image media type for scanning. Received: $MEDIA_TYPE\u0026#34; exit 1 fi DIGEST=$(aws ecr list-images --repository-name \u0026#34;$REPO_NAME\u0026#34; --query \u0026#39;imageIds[?imageTag==`latest`].imageDigest | [0]\u0026#39; --output text --region \u0026#34;$REGION\u0026#34;) echo \u0026#34;=== 7. Start image scan and wait for results ===\u0026#34; aws ecr start-image-scan --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; while true; do STATUS=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --query \u0026#39;imageScanStatus.status\u0026#39; --output text --region \u0026#34;$REGION\u0026#34; 2\u0026gt;/dev/null || echo \u0026#34;IN_PROGRESS\u0026#34;) echo \u0026#34;Scan status: $STATUS\u0026#34; [[ \u0026#34;$STATUS\u0026#34; == \u0026#34;COMPLETE\u0026#34; ]] \u0026amp;\u0026amp; break sleep 5 done echo \u0026#34;=== 8. Scan results (summary) ===\u0026#34; TOTAL_FINDINGS=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#39;length(imageScanFindings.findings)\u0026#39; --output text) CRITICAL_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;CRITICAL\u0026#39;])\u0026#34; --output text) HIGH_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;HIGH\u0026#39;])\u0026#34; --output text) MEDIUM_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;MEDIUM\u0026#39;])\u0026#34; --output text) LOW_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;LOW\u0026#39;])\u0026#34; --output text) INFO_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;INFORMATIONAL\u0026#39;])\u0026#34; --output text || echo 0) echo \u0026#34;Total findings: ${TOTAL_FINDINGS}\u0026#34; echo \u0026#34; CRITICAL: ${CRITICAL_COUNT}\u0026#34; echo \u0026#34; HIGH: ${HIGH_COUNT}\u0026#34; echo \u0026#34; MEDIUM: ${MEDIUM_COUNT}\u0026#34; echo \u0026#34; LOW: ${LOW_COUNT}\u0026#34; echo \u0026#34; INFO: ${INFO_COUNT}\u0026#34; echo \u0026#34;\u0026#34; if [[ \u0026#34;${CRITICAL_COUNT}\u0026#34; != \u0026#34;0\u0026#34; || \u0026#34;${HIGH_COUNT}\u0026#34; != \u0026#34;0\u0026#34; ]]; then echo \u0026#34;=== List of CRITICAL/HIGH findings ===\u0026#34; aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;imageScanFindings.findings[?severity==\u0026#39;CRITICAL\u0026#39; || severity==\u0026#39;HIGH\u0026#39;][].{name:name,severity:severity,uri:uri}\u0026#34; --output table echo \u0026#34;\u0026#34; echo \u0026#34;CRITICAL/HIGH vulnerabilities found. Exiting with code 1.\u0026#34; exit 1 fi if [[ \u0026#34;${TOTAL_FINDINGS}\u0026#34; != \u0026#34;0\u0026#34; ]]; then echo \u0026#34;=== List of findings (summary) ===\u0026#34; aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;imageScanFindings.findings[].{name:name,severity:severity,uri:uri}\u0026#34; --output table echo \u0026#34;\u0026#34; echo \u0026#34;Found ${TOTAL_FINDINGS}finding(s). Please review and address.\u0026#34; exit 0 fi echo \u0026#34;No vulnerabilities found (0 findings).\u0026#34; echo \u0026#34;=== Demo complete ===\u0026#34;  Notes  AWS CLI and Docker must be installed. Must log in with a user that has permission to create ECR, IAM users, and policies. Change the values of ACCOUNT_ID, REGION, and REPO_NAME if needed.  "
+},
+{
+	"uri": "/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]

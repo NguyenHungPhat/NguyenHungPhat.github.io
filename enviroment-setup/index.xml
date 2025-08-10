@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2. Environment Setup on Create a new AWS account.</title>
+    <link>/enviroment-setup/</link>
+    <description>Recent content in 2. Environment Setup on Create a new AWS account.</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="/enviroment-setup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Install AWS CLI and Docker Desktop</title>
+      <link>/enviroment-setup/1-install-awscli-docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/enviroment-setup/1-install-awscli-docker/</guid>
+      <description>2.1 Install AWS CLI 2.1.1 Minimum Requirements  Operating System: Windows, macOS, or Linux. An AWS account has been created.  2.1.2 Steps   Download AWS CLI
+ Windows: Download the installer from AWS CLI v2 Download. macOS: Install via brew or download the .pkg file. Linux: Use the .zip package or your package manager (apt, yum).    Install
+ Windows: Open the .msi file and follow the installation steps.</description>
+    </item>
+    
+  </channel>
+</rss>

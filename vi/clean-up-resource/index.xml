@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>4. Dọn dẹp tài nguyên on Tạo mới tài khoản AWS</title>
+    <link>/vi/clean-up-resource/</link>
+    <description>Recent content in 4. Dọn dẹp tài nguyên on Tạo mới tài khoản AWS</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="/vi/clean-up-resource/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Dọn dẹp tài nguyên</title>
+      <link>/vi/clean-up-resource/10-cleanup/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/clean-up-resource/10-cleanup/</guid>
+      <description>Xóa tất cả tài nguyên được tạo trong buổi demo này Quyền tối thiểu cần có  ecr:DeleteRepository iam:DetachUserPolicy iam:DeletePolicy iam:DeleteUser  Các bước   Xóa ECR repository:
+aws ecr delete-repository --repository-name demo-ecr-repo --force --region ap-southeast-1   Gỡ liên kết và xóa các chính sách:
+aws iam detach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam detach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy   Xóa người dùng IAM:</description>
+    </item>
+    
+  </channel>
+</rss>

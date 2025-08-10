@@ -1,0 +1,127 @@
+[
+{
+	"uri": "/vi/introduce/",
+	"title": "1. Giới thiệu",
+	"tags": [],
+	"description": "",
+	"content": "Giới thiệu AWS ECR Demo là một dự án thực hành nhằm minh họa cách quản lý hình ảnh container một cách an toàn bằng Amazon Elastic Container Registry (ECR).\nThông qua buổi demo này, bạn sẽ học cách:\n Tạo và quản lý các repository ECR riêng tư. Cấu hình người dùng, nhóm và chính sách IAM để truy cập an toàn. Xây dựng và đẩy hình ảnh Docker lên ECR. Quét hình ảnh container để phát hiện lỗ hổng bảo mật. Áp dụng các nguyên tắc bảo mật tốt nhất để bảo vệ chuỗi cung ứng container. Dọn dẹp tài nguyên AWS để tránh phát sinh chi phí không cần thiết.  Sau khi hoàn thành buổi demo, bạn sẽ nắm được các kỹ năng thực tế về:\n Sử dụng AWS CLI để quản lý tài nguyên và tự động hóa. Sử dụng lệnh Docker để xây dựng và quản lý hình ảnh. Các khái niệm bảo mật đám mây liên quan đến lưu trữ hình ảnh container.  Kiến thức này có thể áp dụng trực tiếp vào công việc thực tế về cloud và DevOps, giúp bạn tự tin triển khai các container một cách an toàn trên AWS.\n"
+},
+{
+	"uri": "/vi/",
+	"title": "1. Introduction",
+	"tags": [],
+	"description": "",
+	"content": "Container Registry Management với ECR và Security Policies Tổng quan AWS ECR Demo là một dự án thực hành nhằm minh họa cách quản lý và làm việc với các container image một cách an toàn trên nền tảng đám mây bằng Amazon Elastic Container Registry (ECR). Bản demo mô phỏng quy trình làm việc DevOps thực tế, từ việc build Docker image trên máy cục bộ, đẩy chúng lên kho AWS bảo mật, quét lỗ hổng bảo mật, đến quản lý quyền truy cập thông qua các chính sách IAM.\nMục tiêu Khi thực hiện bản demo này, bạn sẽ:\n Hiểu cách Amazon ECR hoạt động như một container registry được quản lý hoàn toàn. Biết cách cấu hình AWS CLI và Docker Desktop để triển khai workflow container trên đám mây. Có kinh nghiệm quản lý người dùng và chính sách IAM để kiểm soát truy cập an toàn. Thực hiện được các thao tác push, pull và quét lỗ hổng bảo mật cho Docker image trong ECR. Áp dụng các thực hành tốt nhất về bảo mật container và dọn dẹp tài nguyên sau khi sử dụng.  Kết quả đạt được Sau khi hoàn thành dự án này, bạn sẽ có thể:\n Tự tin tương tác với các dịch vụ AWS qua CLI. Quản lý Docker image và repository trên AWS. Thực hiện quét bảo mật để phát hiện lỗ hổng trong container image. Kiểm soát quyền truy cập với IAM dựa trên nguyên tắc phân quyền tối thiểu (least privilege). Tối ưu hóa việc sử dụng AWS bằng cách xóa các tài nguyên không còn cần thiết để tránh chi phí phát sinh.  Tại sao điều này quan trọng Trong phát triển ứng dụng hiện đại theo hướng cloud-native, bảo mật container là yếu tố thiết yếu. Bản demo này không chỉ hướng dẫn các bước kỹ thuật, mà còn rèn luyện tư duy chú trọng đến bảo mật — đảm bảo chuỗi cung ứng container của bạn được bảo vệ khỏi các lỗ hổng và truy cập trái phép.\n"
+},
+{
+	"uri": "/vi/steps/2-create-ecr-repo/",
+	"title": "3.1. Tạo ECR Repository",
+	"tags": [],
+	"description": "",
+	"content": "Tạo Amazon ECR Repository (Bật tính năng Scan on Push) Quyền tối thiểu cần có Để thực hiện các bước sau, bạn cần có tối thiểu các quyền IAM sau:\n ecr:CreateRepository ecr:DescribeRepositories  Các bước thực hiện  Mở terminal với AWS CLI đã được cấu hình. Chạy lệnh sau để tạo một ECR repository với tính năng quét ảnh (image scanning) được bật: aws ecr create-repository \\  --repository-name your-name-repo \\  --image-scanning-configuration scanOnPush=true \\  --region your-region  Nếu repository đã tồn tại, lệnh sẽ trả về lỗi. Bạn có thể bỏ qua lỗi này. Kết quả:   Mẹo Kiểm tra thông tin chi tiết của repository:\naws ecr describe-repositories \\  --repository-names demo-ecr-repo \\  --region ap-southeast-1 "
+},
+{
+	"uri": "/vi/enviroment-setup/1-install-awscli-docker/",
+	"title": "Cài đặt AWS CLI và Docker Desktop",
+	"tags": [],
+	"description": "",
+	"content": "2.1 Cài đặt AWS CLI 2.1.1 Yêu cầu tối thiểu  Hệ điều hành: Windows, macOS hoặc Linux. Đã có tài khoản AWS.  2.1.2 Các bước   Tải AWS CLI\n Windows: Tải file cài đặt từ AWS CLI v2 Download. macOS: Cài qua brew hoặc tải file .pkg. Linux: Sử dụng gói .zip hoặc qua trình quản lý gói (apt, yum).    Cài đặt\n Windows: Mở file .msi và làm theo hướng dẫn cài đặt. macOS: Mở file .pkg hoặc chạy: brew install awscli  Linux: curl \u0026#34;https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\u0026#34; -o \u0026#34;awscliv2.zip\u0026#34; unzip awscliv2.zip sudo ./aws/install     Kiểm tra phiên bản\naws --version   Cấu hình AWS CLI\naws configure   AWS CLI sẽ yêu cầu nhập thông tin\nAWS Access Key ID [None]: \u0026lt;your key\u0026gt; AWS Secret Access Key [None]: \u0026lt;your secret key\u0026gt; Default region name [None]: \u0026lt;your region\u0026gt; Default output format [None]: \u0026lt;press Enter\u0026gt;   2.2 Cài đặt Docker Desktop Cài đặt Docker Desktop 2.2.1 Yêu cầu tối thiểu  Windows  Windows 10/11 64-bit. Enable WSL 2 hoặc Hyper-V. Tối thiểu 4GB RAM.   macOS  macOS 11 (Big Sur) trở lên. Hỗ trợ chip Intel or Apple Silicon (M1/M2) chips.    2.2.2 các bước  Truy cập: https://www.docker.com/products/docker-desktop Chọn phiên bản hợp với hệ điều hành:  Windows (x86_64 / ARM64) Mac (Intel / Apple Silicon) Linux      Cài đặt\n1.1 Windows\n Mở file .exe vừa tải. Chọn Use WSL 2 instead of Hyper-V (khuyến nghị). Nhấn Next và hoàn tất cài đặt. Khởi động lại máy nếu cần.  1.2 macOS\n Mở file .dmg vừa tải. Kéo Docker.app vào thư mục Applications. Mở Docker và cấp quyền chạy.    Xác minh và cài đặt\n  Mở Terminal hoặc CMD và chạy lệnh:\ndocker --version docker compose version "
+},
+{
+	"uri": "/vi/clean-up-resource/10-cleanup/",
+	"title": "Dọn dẹp tài nguyên",
+	"tags": [],
+	"description": "",
+	"content": "Xóa tất cả tài nguyên được tạo trong buổi demo này Quyền tối thiểu cần có  ecr:DeleteRepository iam:DetachUserPolicy iam:DeletePolicy iam:DeleteUser  Các bước   Xóa ECR repository:\naws ecr delete-repository --repository-name demo-ecr-repo --force --region ap-southeast-1   Gỡ liên kết và xóa các chính sách:\naws iam detach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy aws iam detach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy aws iam delete-policy --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy   Xóa người dùng IAM:\naws iam delete-user --user-name dev aws iam delete-user --user-name ops   "
+},
+{
+	"uri": "/vi/enviroment-setup/",
+	"title": "2. Thiết lập môi trường",
+	"tags": [],
+	"description": "",
+	"content": "Phần thiết lập môi trường này đảm bảo bạn có đầy đủ các công cụ cần thiết để thực hiện Amazon ECR Security Demo.\nChúng ta sẽ sử dụng AWS CLI để tương tác với các dịch vụ AWS và Docker Desktop để build và quản lý container image.\nAWS CLI AWS Command Line Interface (AWS CLI) là một công cụ hợp nhất để quản lý các dịch vụ AWS trực tiếp từ terminal hoặc command prompt.\nDocker Desktop Docker Desktop là một nền tảng containerization dùng để build, chia sẻ và chạy ứng dụng trong các container.\nKhi AWS CLI và Docker Desktop đã được cài đặt và cấu hình, bạn sẽ sẵn sàng để:\n Tạo Amazon ECR repository. Đẩy và quét container image. Triển khai các biện pháp kiểm soát bảo mật IAM. Dọn dẹp tài nguyên sau khi thử nghiệm.  "
+},
+{
+	"uri": "/vi/steps/3-create-iam-user/",
+	"title": "3.2 Tạo Người Dùng IAM",
+	"tags": [],
+	"description": "",
+	"content": "Tạo người dùng IAM cho Dev và Ops Quyền tối thiểu Để thực hiện các bước sau, bạn cần có tối thiểu các quyền IAM sau:\n iam:CreateUser iam:ListUsers  Các bước  Tạo người dùng Dev: aws iam create-user --user-name dev || echo \u0026#34;User dev already exists\u0026#34;  Tạo người dùng Ops: aws iam create-user --user-name ops || echo \u0026#34;User ops already exists\u0026#34;   Mẹo Để tạo Access Key cho những người dùng này (sử dụng cho CLI/Docker login):\naws iam create-access-key --user-name dev aws iam create-access-key --user-name ops Kết quả "
+},
+{
+	"uri": "/vi/steps/",
+	"title": "3. Các bước",
+	"tags": [],
+	"description": "",
+	"content": "AWS ECR Security Demo Hướng dẫn này sẽ hướng dẫn bạn tạo một Amazon ECR repository, cấu hình người dùng và chính sách IAM, đẩy Docker image, và quét chúng để tìm lỗ hổng bảo mật.\nMỗi phần bao gồm:\n Quyền tối thiểu cần có Hướng dẫn từng bước Mẹo và Ghi chú  "
+},
+{
+	"uri": "/vi/steps/4-dev-policy-push/",
+	"title": "3.3. Tạo Policy cho Dev (Push Image)",
+	"tags": [],
+	"description": "",
+	"content": "Tạo và Gán Policy cho Người Dùng Dev Quyền tối thiểu  iam:CreatePolicy iam:AttachUserPolicy  Các bước  Tạo file policy dev-policy.json: { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:PutImage\u0026#34;, \u0026#34;ecr:InitiateLayerUpload\u0026#34;, \u0026#34;ecr:UploadLayerPart\u0026#34;, \u0026#34;ecr:CompleteLayerUpload\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:ap-southeast-1:997118487291:repository/demo-ecr-repo\u0026#34; } ] }  Tạo policy trong IAM: aws iam create-policy --policy-name DevPushECRPolicy --policy-document file://dev-policy.json || echo \u0026#34;Policy already exists\u0026#34;  Gán policy cho người dùng Dev: aws iam attach-user-policy --user-name dev --policy-arn arn:aws:iam::997118487291:policy/DevPushECRPolicy   "
+},
+{
+	"uri": "/vi/steps/5-ops-policy-pull/",
+	"title": "3.4. Tạo Policy cho Ops (Pull Image)",
+	"tags": [],
+	"description": "",
+	"content": "Tạo và Gán Policy cho Người Dùng Ops Quyền tối thiểu  iam:CreatePolicy iam:AttachUserPolicy  Các bước  Tạo file policy ops-policy.json: { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:GetDownloadUrlForLayer\u0026#34;, \u0026#34;ecr:BatchGetImage\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:ap-southeast-1:997118487291:repository/demo-ecr-repo\u0026#34; } ] }  Tạo policy trong IAM: aws iam create-policy --policy-name OpsPullECRPolicy --policy-document file://ops-policy.json || echo \u0026#34;Policy already exists\u0026#34;  Gán policy cho người dùng Ops: aws iam attach-user-policy --user-name ops --policy-arn arn:aws:iam::997118487291:policy/OpsPullECRPolicy   "
+},
+{
+	"uri": "/vi/clean-up-resource/",
+	"title": "4. Dọn dẹp tài nguyên",
+	"tags": [],
+	"description": "",
+	"content": "Sau khi hoàn thành AWS ECR Demo, việc xóa các tài nguyên đã tạo là rất quan trọng để tránh phát sinh chi phí không cần thiết và giữ cho môi trường AWS gọn gàng.\nCác tài nguyên cần xóa   Kho ECR\n Xóa kho chứa (repository) đã tạo cho buổi demo. Đảm bảo đã xóa hết các image trước khi xóa repository.    Người dùng, nhóm và chính sách IAM\n Xóa người dùng IAM đã tạo cho buổi demo. Gỡ liên kết và xóa các chính sách IAM tùy chỉnh. Xóa nhóm IAM nếu không còn sử dụng.    Docker images cục bộ\n Xóa các Docker image đã build cho buổi demo khỏi môi trường cục bộ để giải phóng dung lượng.    "
+},
+{
+	"uri": "/vi/steps/6-build-push-image/",
+	"title": "3.5. Build và Push Docker Image",
+	"tags": [],
+	"description": "",
+	"content": "Build và Push Docker Image lên ECR Quyền tối thiểu  Người dùng Dev phải có quyền push (xem Bước 3).  Các bước  Xác thực Docker với ECR: ECR_REPO_URI=\u0026#34;997118487291.dkr.ecr.ap-southeast-1.amazonaws.com/demo-ecr-repo\u0026#34; aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin \u0026#34;$ECR_REPO_URI\u0026#34;  Tạo file Dockerfile: FROMalpine:3.18CMD [\u0026#34;echo\u0026#34;, \u0026#34;Hello from AWS ECR\u0026#34;] Build image (chỉ định platform để tương thích quét lỗ hổng): DOCKER_BUILDKIT=0 docker build --platform linux/amd64 -t \u0026#34;${ECR_REPO_URI}:latest\u0026#34; .  Push image lên ECR: docker push \u0026#34;${ECR_REPO_URI}:latest\u0026#34;  Kết quả:   "
+},
+{
+	"uri": "/vi/steps/7-check-manifest/",
+	"title": "3.6. Kiểm tra Image Manifest",
+	"tags": [],
+	"description": "",
+	"content": "Xác minh Image Manifest cho việc quét ECR Quyền tối thiểu  ecr:BatchGetImage  Các bước  Lấy loại media của image manifest: aws ecr batch-get-image \\  --repository-name demo-ecr-repo \\  --image-ids imageTag=latest \\  --region ap-southeast-1 \\  --query \u0026#39;images[0].imageManifestMediaType\u0026#39; \\  --output text  Đảm bảo media type là một trong các giá trị sau:  application/vnd.docker.distribution.manifest.v2+json application/vnd.oci.image.manifest.v1+json   Kết quả:   "
+},
+{
+	"uri": "/vi/steps/8-scan-image/",
+	"title": "3.7. Bắt đầu quét ảnh ECR",
+	"tags": [],
+	"description": "",
+	"content": "Bắt đầu quét ảnh ECR và chờ kết quả Quyền tối thiểu cần có  ecr:StartImageScan ecr:DescribeImageScanFindings  Các bước thực hiện  Lấy digest của ảnh: DIGEST=$(aws ecr list-images --repository-name demo-ecr-repo --query \u0026#39;imageIds[?imageTag==`latest`].imageDigest\u0026#39; --output text --region ap-southeast-1)  Bắt đầu quét ảnh: aws ecr start-image-scan --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region ap-southeast-1  Kiểm tra trạng thái quét đến khi hoàn thành: while true; do STATUS=$(aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --query \u0026#39;imageScanStatus.status\u0026#39; --output text --region ap-southeast-1 2\u0026gt;/dev/null || echo \u0026#34;IN_PROGRESS\u0026#34;) echo \u0026#34;Trạng thái quét: $STATUS\u0026#34; [[ \u0026#34;$STATUS\u0026#34; == \u0026#34;COMPLETE\u0026#34; ]] \u0026amp;\u0026amp; break sleep 5 done  Kết quả:   "
+},
+{
+	"uri": "/vi/steps/9-scan-results/",
+	"title": "3.8. Xem và đánh giá kết quả quét",
+	"tags": [],
+	"description": "",
+	"content": "Lấy và xem kết quả quét ECR Quyền tối thiểu cần có  ecr:DescribeImageScanFindings  Các bước thực hiện  Đếm tổng số kết quả phát hiện và theo mức độ nghiêm trọng: TOTAL_FINDINGS=$(aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region ap-southeast-1 --query \u0026#39;length(imageScanFindings.findings)\u0026#39; --output text)  Nếu có các phát hiện ở mức CRITICAL hoặc HIGH, liệt kê chúng: aws ecr describe-image-scan-findings --repository-name demo-ecr-repo --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region ap-southeast-1 --query \u0026#34;imageScanFindings.findings[?severity==\u0026#39;CRITICAL\u0026#39; || severity==\u0026#39;HIGH\u0026#39;][].{name:name,severity:severity,uri:uri}\u0026#34; --output table  Kết quả:   "
+},
+{
+	"uri": "/vi/steps/10-fullscript/",
+	"title": "3.9. Full Script",
+	"tags": [],
+	"description": "",
+	"content": "Script này thực hiện các bước sau:\n Tạo ECR repository với tính năng scan-on-push bật sẵn. Tạo IAM users gồm dev (push image) và ops (pull image). Gán policy cho từng user để hạn chế quyền theo chức năng. Build \u0026amp; Push Docker image lên ECR. Kiểm tra manifest image để đảm bảo hỗ trợ scan. Scan image và chờ kết quả. Xuất kết quả scan theo mức độ severity (CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL).   Script #!/usr/bin/env bash set -euo pipefail # === Thông số cấu hình === REGION=\u0026#34;your-region\u0026#34; ACCOUNT_ID=\u0026#34;your-ID\u0026#34; REPO_NAME=\u0026#34;your-repo-name\u0026#34; DEV_USER=\u0026#34;dev\u0026#34; OPS_USER=\u0026#34;ops\u0026#34; DEV_POLICY_NAME=\u0026#34;DevPushECRPolicy\u0026#34; OPS_POLICY_NAME=\u0026#34;OpsPullECRPolicy\u0026#34; IMAGE_TAG=\u0026#34;latest\u0026#34; IMAGE_NAME=\u0026#34;${REPO_NAME}:${IMAGE_TAG}\u0026#34; ECR_REPO_URI=\u0026#34;${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO_NAME}\u0026#34; echo \u0026#34;=== 1. Tạo ECR repository (bật scan-on-push) ===\u0026#34; aws ecr create-repository --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-scanning-configuration scanOnPush=true --region \u0026#34;$REGION\u0026#34; || echo \u0026#34;Repo đã tồn tại\u0026#34; echo \u0026#34;=== 2. Tạo IAM users ===\u0026#34; aws iam create-user --user-name \u0026#34;$DEV_USER\u0026#34; || echo \u0026#34;User dev đã tồn tại\u0026#34; aws iam create-user --user-name \u0026#34;$OPS_USER\u0026#34; || echo \u0026#34;User ops đã tồn tại\u0026#34; echo \u0026#34;=== 3. Tạo policy cho dev (push image) ===\u0026#34; cat \u0026gt; dev-policy.json \u0026lt;\u0026lt;EOF { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:PutImage\u0026#34;, \u0026#34;ecr:InitiateLayerUpload\u0026#34;, \u0026#34;ecr:UploadLayerPart\u0026#34;, \u0026#34;ecr:CompleteLayerUpload\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:${REGION}:${ACCOUNT_ID}:repository/${REPO_NAME}\u0026#34; } ] } EOF aws iam create-policy --policy-name \u0026#34;$DEV_POLICY_NAME\u0026#34; --policy-document file://dev-policy.json || echo \u0026#34;Policy dev đã tồn tại\u0026#34; aws iam attach-user-policy --user-name \u0026#34;$DEV_USER\u0026#34; --policy-arn \u0026#34;arn:aws:iam::${ACCOUNT_ID}:policy/${DEV_POLICY_NAME}\u0026#34; echo \u0026#34;=== 4. Tạo policy cho ops (pull image) ===\u0026#34; cat \u0026gt; ops-policy.json \u0026lt;\u0026lt;EOF { \u0026#34;Version\u0026#34;: \u0026#34;2012-10-17\u0026#34;, \u0026#34;Statement\u0026#34;: [ { \u0026#34;Effect\u0026#34;: \u0026#34;Allow\u0026#34;, \u0026#34;Action\u0026#34;: [ \u0026#34;ecr:GetAuthorizationToken\u0026#34;, \u0026#34;ecr:BatchCheckLayerAvailability\u0026#34;, \u0026#34;ecr:GetDownloadUrlForLayer\u0026#34;, \u0026#34;ecr:BatchGetImage\u0026#34; ], \u0026#34;Resource\u0026#34;: \u0026#34;arn:aws:ecr:${REGION}:${ACCOUNT_ID}:repository/${REPO_NAME}\u0026#34; } ] } EOF aws iam create-policy --policy-name \u0026#34;$OPS_POLICY_NAME\u0026#34; --policy-document file://ops-policy.json || echo \u0026#34;Policy ops đã tồn tại\u0026#34; aws iam attach-user-policy --user-name \u0026#34;$OPS_USER\u0026#34; --policy-arn \u0026#34;arn:aws:iam::${ACCOUNT_ID}:policy/${OPS_POLICY_NAME}\u0026#34; echo \u0026#34;=== 5. Build \u0026amp; Push Docker image single-platform ===\u0026#34; aws ecr get-login-password --region \u0026#34;$REGION\u0026#34; | docker login --username AWS --password-stdin \u0026#34;$ECR_REPO_URI\u0026#34; cat \u0026gt; Dockerfile \u0026lt;\u0026lt;\u0026#39;EOF\u0026#39; FROM alpine:3.18 CMD [\u0026#34;echo\u0026#34;, \u0026#34;Hello from AWS ECR\u0026#34;] EOF DOCKER_BUILDKIT=0 docker build --platform linux/amd64 -t \u0026#34;${ECR_REPO_URI}:${IMAGE_TAG}\u0026#34; . docker push \u0026#34;${ECR_REPO_URI}:${IMAGE_TAG}\u0026#34; echo \u0026#34;=== 6. Kiểm tra manifest image và scan ===\u0026#34; MEDIA_TYPE=$(aws ecr batch-get-image --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-ids imageTag=\u0026#34;$IMAGE_TAG\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#39;images[0].imageManifestMediaType\u0026#39; --output text) echo \u0026#34;Media type: $MEDIA_TYPE\u0026#34; if [[ \u0026#34;$MEDIA_TYPE\u0026#34; != \u0026#34;application/vnd.docker.distribution.manifest.v2+json\u0026#34; \u0026amp;\u0026amp; \u0026#34;$MEDIA_TYPE\u0026#34; != \u0026#34;application/vnd.oci.image.manifest.v1+json\u0026#34; ]]; then echo \u0026#34;Image media type không hợp lệ để scan. Giá trị nhận được: $MEDIA_TYPE\u0026#34; exit 1 fi DIGEST=$(aws ecr list-images --repository-name \u0026#34;$REPO_NAME\u0026#34; --query \u0026#39;imageIds[?imageTag==`latest`].imageDigest | [0]\u0026#39; --output text --region \u0026#34;$REGION\u0026#34;) echo \u0026#34;=== 7. Bắt đầu scan image và chờ kết quả ===\u0026#34; aws ecr start-image-scan --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; while true; do STATUS=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --query \u0026#39;imageScanStatus.status\u0026#39; --output text --region \u0026#34;$REGION\u0026#34; 2\u0026gt;/dev/null || echo \u0026#34;IN_PROGRESS\u0026#34;) echo \u0026#34;Scan status: $STATUS\u0026#34; [[ \u0026#34;$STATUS\u0026#34; == \u0026#34;COMPLETE\u0026#34; ]] \u0026amp;\u0026amp; break sleep 5 done echo \u0026#34;=== 8. Kết quả scan (tóm tắt) ===\u0026#34; TOTAL_FINDINGS=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#39;length(imageScanFindings.findings)\u0026#39; --output text) CRITICAL_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;CRITICAL\u0026#39;])\u0026#34; --output text) HIGH_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;HIGH\u0026#39;])\u0026#34; --output text) MEDIUM_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;MEDIUM\u0026#39;])\u0026#34; --output text) LOW_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;LOW\u0026#39;])\u0026#34; --output text) INFO_COUNT=$(aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;length(imageScanFindings.findings[?severity==\u0026#39;INFORMATIONAL\u0026#39;])\u0026#34; --output text || echo 0) echo \u0026#34;Total findings: ${TOTAL_FINDINGS}\u0026#34; echo \u0026#34; CRITICAL: ${CRITICAL_COUNT}\u0026#34; echo \u0026#34; HIGH: ${HIGH_COUNT}\u0026#34; echo \u0026#34; MEDIUM: ${MEDIUM_COUNT}\u0026#34; echo \u0026#34; LOW: ${LOW_COUNT}\u0026#34; echo \u0026#34; INFO: ${INFO_COUNT}\u0026#34; echo \u0026#34;\u0026#34; if [[ \u0026#34;${CRITICAL_COUNT}\u0026#34; != \u0026#34;0\u0026#34; || \u0026#34;${HIGH_COUNT}\u0026#34; != \u0026#34;0\u0026#34; ]]; then echo \u0026#34;=== Danh sách CRITICAL/HIGH findings ===\u0026#34; aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;imageScanFindings.findings[?severity==\u0026#39;CRITICAL\u0026#39; || severity==\u0026#39;HIGH\u0026#39;][].{name:name,severity:severity,uri:uri}\u0026#34; --output table echo \u0026#34;\u0026#34; echo \u0026#34;Có lỗ hổng mức CRITICAL/HIGH. Kết thúc với exit code 1.\u0026#34; exit 1 fi if [[ \u0026#34;${TOTAL_FINDINGS}\u0026#34; != \u0026#34;0\u0026#34; ]]; then echo \u0026#34;=== Danh sách các finding (tóm tắt) ===\u0026#34; aws ecr describe-image-scan-findings --repository-name \u0026#34;$REPO_NAME\u0026#34; --image-id imageDigest=\u0026#34;$DIGEST\u0026#34; --region \u0026#34;$REGION\u0026#34; --query \u0026#34;imageScanFindings.findings[].{name:name,severity:severity,uri:uri}\u0026#34; --output table echo \u0026#34;\u0026#34; echo \u0026#34;Có ${TOTAL_FINDINGS}finding(s). Vui lòng kiểm tra và xử lý.\u0026#34; exit 0 fi echo \u0026#34;Không tìm thấy lỗ hổng (0 findings).\u0026#34; echo \u0026#34;=== Demo hoàn tất ===\u0026#34;  Ghi chú  Cần cài đặt AWS CLI và Docker. Phải đăng nhập với user có quyền tạo ECR, IAM users, policies.  "
+},
+{
+	"uri": "/vi/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "/vi/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>2. Thiết lập môi trường on Tạo mới tài khoản AWS</title>
+    <link>/vi/enviroment-setup/</link>
+    <description>Recent content in 2. Thiết lập môi trường on Tạo mới tài khoản AWS</description>
+    <generator>Hugo -- gohugo.io</generator><atom:link href="/vi/enviroment-setup/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cài đặt AWS CLI và Docker Desktop</title>
+      <link>/vi/enviroment-setup/1-install-awscli-docker/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/vi/enviroment-setup/1-install-awscli-docker/</guid>
+      <description>2.1 Cài đặt AWS CLI 2.1.1 Yêu cầu tối thiểu  Hệ điều hành: Windows, macOS hoặc Linux. Đã có tài khoản AWS.  2.1.2 Các bước   Tải AWS CLI
+ Windows: Tải file cài đặt từ AWS CLI v2 Download. macOS: Cài qua brew hoặc tải file .pkg. Linux: Sử dụng gói .zip hoặc qua trình quản lý gói (apt, yum).    Cài đặt
+ Windows: Mở file .</description>
+    </item>
+    
+  </channel>
+</rss>
